@@ -208,10 +208,23 @@ const loadProducts = () => {
     },
   ];
   showProducts(data);
+  searchProducts(data)
 };
+
+const searchProducts = (data) => {
+  const searchField = document.getElementById('input-field');
+  const searchText = searchField.value;
+  searchField.value = "";
+  // console.log(data[0])
+  const filteredProducts = data.filter(item => item.title.toLowerCase().includes(searchText));
+  showProducts(filteredProducts);
+}
+document.getElementById('search-btn').addEventListener('click', searchProducts);
+
 
 // show all product in UI
 const showProducts = (products) => {
+  document.getElementById('all-products').innerText = "";
   const allProducts = products.map((pd) => pd);
   for (const product of allProducts) {
     const image = product.image;

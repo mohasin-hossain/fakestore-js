@@ -18,6 +18,7 @@ body {
   border-radius: 5px;
   margin: auto;
   margin-top: 50px;
+  margin-bottom: 50px;
   border-right: none;
 }
 .search-button {
