@@ -208,23 +208,25 @@ const loadProducts = () => {
     },
   ];
   showProducts(data);
-  searchProducts(data)
+  searchProducts(data);
 };
 
 const searchProducts = (data) => {
-  const searchField = document.getElementById('input-field');
+  const searchField = document.getElementById("input-field");
   const searchText = searchField.value;
   searchField.value = "";
-  // console.log(data[0])
-  const filteredProducts = data.filter(item => item.title.toLowerCase().includes(searchText));
+  const productDetailsContainer = document.getElementById("product-details");
+  productDetailsContainer.textContent = "";
+  const filteredProducts = data.filter((item) =>
+    item.title.toLowerCase().includes(searchText)
+  );
   showProducts(filteredProducts);
-}
-document.getElementById('search-btn').addEventListener('click', searchProducts);
-
+};
+document.getElementById("search-btn").addEventListener("click", searchProducts);
 
 // show all product in UI
 const showProducts = (products) => {
-  document.getElementById('all-products').innerText = "";
+  document.getElementById("all-products").innerText = "";
   const allProducts = products.map((pd) => pd);
   for (const product of allProducts) {
     const image = product.image;
@@ -238,11 +240,34 @@ const showProducts = (products) => {
       <p>Category: ${product.category}</p>
       <h2>Price: $ ${product.price}</h2>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="showDetails(${product.id})" id="details-btn" class="btn btn-danger">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
 };
+
+const showDetails = async (id) => {
+  const url = `https://fakestoreapi.com/products/${id}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  displayProductDetails(data);
+};
+
+const displayProductDetails = (productDetails) => {
+  const { title, price, description } = productDetails;
+  const productDetailsContainer = document.getElementById("product-details");
+
+  productDetailsContainer.innerHTML = `
+    <div class="card text-center bg-light text-dark mb-4">
+      <div class="card-body">
+        <h5 class="card-title">${title}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Price: ${price}</h6>
+        <p class="card-text">${description}</p>
+      </div>
+    </div>
+  `;
+};
+
 let count = 0;
 const addToCart = (id, price) => {
   count = count + 1;
@@ -276,7 +301,7 @@ const setInnerText = (id, value) => {
 // update delivery charge and total Tax
 const updateTaxAndCharge = () => {
   const priceConverted = getInputValue("price");
-  console.log(priceConverted)
+  console.log(priceConverted);
   if (priceConverted > 200) {
     setInnerText("delivery-charge", 30);
     setInnerText("total-tax", (priceConverted * 0.2).toFixed(2));
